@@ -1,35 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.2;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <RootNamespace>Expo.Server</RootNamespace>
-    <Authors>Ashley Messer</Authors>
+    <Authors>Mikita Slaunikau</Authors>
     <Company></Company>
-    <Description>Expo Server SDK Client for dotnet Push notifications</Description>
-    <Copyright>2020</Copyright>
+    <Description>Community Expo Server SDK Client for dotnet Push notifications</Description>
+    <Copyright>2021</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <RepositoryUrl>https://github.com/glyphard/expo-server-sdk-dotnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/lil-kita/expo-server-sdk-dotnet</RepositoryUrl>
     <PackageTags>expo push notifications</PackageTags>
-    <PackageId>Expo.Server.SDK</PackageId>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Community.Expo.Server.SDK</PackageId>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <AssemblyName>Expo.Server.SDK</AssemblyName>
-    <PackageReleaseNotes>validated implementation</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+    <AssemblyName>Community.Expo.Server.SDK</AssemblyName>
+    <PackageReleaseNotes>first release</PackageReleaseNotes>
+    <Version>1.0.0</Version>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Tests.expo-server-sdk-dotnet\**" />
-    <EmbeddedResource Remove="Tests.expo-server-sdk-dotnet\**" />
-    <None Remove="Tests.expo-server-sdk-dotnet\**" />
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>
