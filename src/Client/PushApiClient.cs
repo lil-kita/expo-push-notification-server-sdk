@@ -44,30 +44,27 @@ namespace Expo.Server.Client
 
         public async Task<U> PostAsync<T, U>(string path, List<T> requestObj) where T : class
         {
-            string serializedRequestObj = JsonConvert.SerializeObject(requestObj, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            });
-            StringContent requestBody = new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
-            U responseBody = default;
-            HttpResponseMessage response = await _httpClient.PostAsync(path, requestBody);
-
-            if (response.IsSuccessStatusCode)
-            {
-                string rawResponseBody = await response.Content.ReadAsStringAsync();
-                responseBody = JsonConvert.DeserializeObject<U>(rawResponseBody);
-            }
-
-            return responseBody;
+            StringContent requestBody = Serialize(requestObj);
+            return await SendRequest<U>(path, requestBody);
         }
 
         public async Task<U> PostAsync<T, U>(string path, T requestObj) where T : class
         {
-            string serializedRequestObj = JsonConvert.SerializeObject(requestObj, new JsonSerializerSettings
+            StringContent requestBody = Serialize(requestObj);
+            return await SendRequest<U>(path, requestBody);
+        }
+
+        private StringContent Serialize<T>(T obj) where T: class
+        {
+            string serializedRequestObj = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore
             });
-            StringContent requestBody = new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
+            return new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
+        }
+
+        private async Task<U> SendRequest<U>(string path, StringContent requestBody)
+        {
             U responseBody = default;
             HttpResponseMessage response = await _httpClient.PostAsync(path, requestBody);
 
