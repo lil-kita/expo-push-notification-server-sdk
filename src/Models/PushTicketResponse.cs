@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Expo.Server.Models {
+namespace Expo.Server.Models 
+{
     [JsonObject (MemberSerialization.OptIn)]
-    public class PushTicketResponse {
+    public class PushTicketResponse 
+    {
         [JsonProperty (PropertyName = "data")]
         public List<PushTicketStatus> PushTicketStatuses { get; set; }
 
@@ -15,8 +17,8 @@ namespace Expo.Server.Models {
     }
 
     [JsonObject (MemberSerialization.OptIn)]
-    public class PushTicketStatus {
-
+    public class PushTicketStatus 
+    {
         [JsonProperty (PropertyName = "status")] //"error" | "ok",
         public string TicketStatus { get; set; }
 
@@ -31,7 +33,8 @@ namespace Expo.Server.Models {
     }
 
     [JsonObject (MemberSerialization.OptIn)]
-    public class PushTicketErrors {
+    public class PushTicketErrors 
+    {
         [JsonProperty (PropertyName = "code")]
         public string ErrorCode { get; set; }
 
