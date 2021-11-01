@@ -8,7 +8,7 @@ namespace Expo.Server.Models
     public class PushTicketRequests
     {
         [JsonProperty(PropertyName = "")]
-        public List<PushTicketRequest> PushTickets { get; set; }
+        public List<PushTicketRequest> PushTickets { get; set; } // It may either be a single message object or a list of up to 100 message objects
     }
 
     [JsonObject(MemberSerialization.OptIn)]

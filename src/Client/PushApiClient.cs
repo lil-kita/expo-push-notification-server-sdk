@@ -11,56 +11,69 @@ namespace Expo.Server.Client
 {
     public class PushApiClient
     {
-        //Environemt Configuration
         private const string _expoBackendHost = "https://exp.host";
         private const string _pushSendPath = "/--/api/v2/push/send";
         private const string _pushGetReceiptsPath = "/--/api/v2/push/getReceipts";
 
-        //Make this static to avoid socket saturation and limit concurrent server connections to 6, but only for instances of this class.
-        private static readonly HttpClientHandler _httpHandler = new HttpClientHandler() { MaxConnectionsPerServer = 6 };
-        private static readonly HttpClient _httpClient = new HttpClient(_httpHandler);
+        private readonly HttpClientHandler _httpHandler;
+        private readonly HttpClient _httpClient;
 
-        public string AccessToken
+        public PushApiClient(string token)
         {
-            set
+            _httpHandler = new HttpClientHandler() { MaxConnectionsPerServer = 6 };
+            _httpClient = new HttpClient(_httpHandler)
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", value);
-            }
-        }
-        static PushApiClient()
-        {
-            _httpClient.BaseAddress = new Uri(_expoBackendHost);
+                BaseAddress = new Uri(_expoBackendHost)
+            };
             _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
-        public async Task<PushTicketResponse> PushSendAsync(PushTicketRequest pushTicketRequest)
+        public async Task<PushTicketResponse> PushSendAsync(List<PushTicketRequest> pushTicketRequest)
         {
-            var ticketResponse = await PostAsync<PushTicketRequest, PushTicketResponse>(pushTicketRequest, _pushSendPath);
+            PushTicketResponse ticketResponse = await PostAsync<PushTicketRequest, PushTicketResponse>(_pushSendPath, pushTicketRequest);
             return ticketResponse;
         }
 
         public async Task<PushResceiptResponse> PushGetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
         {
-            var receiptResponse = await PostAsync<PushReceiptRequest, PushResceiptResponse>( pushReceiptRequest, _pushGetReceiptsPath );
+            PushResceiptResponse receiptResponse = await PostAsync<PushReceiptRequest, PushResceiptResponse>(_pushGetReceiptsPath, pushReceiptRequest);
             return receiptResponse;
         }
 
-        public async Task<U> PostAsync<T, U>(T requestObj, string path) where T : new()
+        public async Task<U> PostAsync<T, U>(string path, List<T> requestObj) where T : class
         {
-
-            var serializedRequestObj = JsonConvert.SerializeObject(requestObj, new JsonSerializerSettings
+            string serializedRequestObj = JsonConvert.SerializeObject(requestObj, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore
             });
-            var requestBody = new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
-            var responseBody = default(U);
-            var response = await _httpClient.PostAsync(path, requestBody);
+            StringContent requestBody = new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
+            U responseBody = default;
+            HttpResponseMessage response = await _httpClient.PostAsync(path, requestBody);
 
             if (response.IsSuccessStatusCode)
             {
-                var rawResponseBody = await response.Content.ReadAsStringAsync();
+                string rawResponseBody = await response.Content.ReadAsStringAsync();
+                responseBody = JsonConvert.DeserializeObject<U>(rawResponseBody);
+            }
+
+            return responseBody;
+        }
+
+        public async Task<U> PostAsync<T, U>(string path, T requestObj) where T : class
+        {
+            string serializedRequestObj = JsonConvert.SerializeObject(requestObj, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
+            StringContent requestBody = new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
+            U responseBody = default;
+            HttpResponseMessage response = await _httpClient.PostAsync(path, requestBody);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string rawResponseBody = await response.Content.ReadAsStringAsync();
                 responseBody = JsonConvert.DeserializeObject<U>(rawResponseBody);
             }
 
