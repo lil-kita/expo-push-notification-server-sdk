@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>net5.0</TargetFrameworks>
     <RootNamespace>Expo.Server</RootNamespace>
-    <Authors>Mikita Slaunikau</Authors>
+    <Authors>Mikita Slaunikau, Ashley Messer</Authors>
     <Company></Company>
-    <Description>Community Expo Server SDK Client for dotnet Push notifications</Description>
+    <Description>Community Expo Server SDK for Push notifications</Description>
     <Copyright>2021</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <RepositoryUrl>https://github.com/lil-kita/expo-server-sdk-dotnet</RepositoryUrl>
-    <PackageTags>expo push notifications</PackageTags>
+    <RepositoryUrl>https://github.com/lil-kita/expo-push-notification-server-sdk</RepositoryUrl>
+    <PackageTags>expo push notifications server</PackageTags>
     <PackageId>Community.Expo.Server.SDK</PackageId>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
