@@ -30,28 +30,18 @@ namespace Expo.Server.Client
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
-        public async Task<PushTicketResponse> PushSendAsync(List<PushTicketRequest> pushTicketRequest)
+        public async Task<PushTicketResponse> PushSendAsync(List<PushTicketRequest> pushTicketRequest) // It may either be a single message object or a list of up to 100 message objects
         {
-            PushTicketResponse ticketResponse = await PostAsync<PushTicketRequest, PushTicketResponse>(_pushSendPath, pushTicketRequest);
+            StringContent requestBody = Serialize(pushTicketRequest);
+            PushTicketResponse ticketResponse = await SendRequest<PushTicketResponse>(_pushSendPath, requestBody);
             return ticketResponse;
         }
 
-        public async Task<PushResceiptResponse> PushGetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
+        public async Task<PushResceiptResponse> PushGetReceiptsAsync(PushReceiptRequest pushReceiptRequest) // Make sure you are only sending a list of 1000 (or less) ticket ID strings
         {
-            PushResceiptResponse receiptResponse = await PostAsync<PushReceiptRequest, PushResceiptResponse>(_pushGetReceiptsPath, pushReceiptRequest);
+            StringContent requestBody = Serialize(pushReceiptRequest);
+            PushResceiptResponse receiptResponse = await SendRequest<PushResceiptResponse>(_pushGetReceiptsPath, requestBody);
             return receiptResponse;
-        }
-
-        public async Task<U> PostAsync<T, U>(string path, List<T> requestObj) where T : class
-        {
-            StringContent requestBody = Serialize(requestObj);
-            return await SendRequest<U>(path, requestBody);
-        }
-
-        public async Task<U> PostAsync<T, U>(string path, T requestObj) where T : class
-        {
-            StringContent requestBody = Serialize(requestObj);
-            return await SendRequest<U>(path, requestBody);
         }
 
         private StringContent Serialize<T>(T obj) where T: class
