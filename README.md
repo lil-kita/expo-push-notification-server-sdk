@@ -1,17 +1,15 @@
-# expo-server-sdk-dotnet
+# community-expo-push-notification-server-sdk
 ### created by [Ashley Messer](https://github.com/glyphard)
-### edited by Mikita Slaunikau
-
+### modified by Mikita Slaunikau
 
 ## Usage
-
 
 ```cs
 
 using expo_server_sdk_dotnet.Client;
 using expo_server_sdk_dotnet.Models;
 
-	private PushApiClient _expoClient = new PushApiClient("your token here");
+	private PushApiClient _client = new PushApiClient("your token here");
 	PushTicketRequest pushTicketRequest1 = new PushTicketRequest()
             {
                 PushTo = new List<string>() { ... },
@@ -27,7 +25,7 @@ using expo_server_sdk_dotnet.Models;
                 PushChannelId = "test"
             };
 
-	PushTicketResponse result = await expoSDKClient.PushSendAsync(
+	PushTicketResponse result = await _client.SendPushAsync(
 		new List<PushTicketRequest>() { pushTicketRequest1, pushTicketRequest2 }
 		);
 
@@ -61,7 +59,7 @@ using expo_server_sdk_dotnet.Models;
 // Apple and Google so you can handle it appropriately.
 	
 	PushReceiptRequest pushReceiptRequest = new PushReceiptRequest() { PushTicketIds = new List<string>() { ... } };
-	PushReceiptResponse pushReceiptResult = await expoSDKClient.PushGetReceiptsAsync(pushReceiptRequest);
+	PushReceiptResponse pushReceiptResult = await _client.GetReceiptsAsync(pushReceiptRequest);
 
 	if (pushReceiptResult?.ErrorInformations?.Count() > 0) 
 	{
