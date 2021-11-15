@@ -1,32 +1,39 @@
-# expo-server-sdk-dotnet
-Server-side library for working with Expo using dot-net.
-
-If you have problems with the code in this repository, please file an issue.
+# community-expo-push-notification-server-sdk
+### created by [Ashley Messer](https://github.com/glyphard)
+### modified by Mikita Slaunikau
 
 ## Usage
-
 
 ```cs
 
 using expo_server_sdk_dotnet.Client;
 using expo_server_sdk_dotnet.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-	var expoSDKClient = new PushApiClient();
-	var pushTicketReq = new PushTicketRequest() {
-		PushTo = new List<string>() { "..." },
-		PushBadgeCount = 7,
-		PushBody = "Test Push - Msg"
-	};
-	var result = await expoSDKClient.PushSendAsync(pushTicketReq);
+	private PushApiClient _client = new PushApiClient("your token here");
+	PushTicketRequest pushTicketRequest1 = new PushTicketRequest()
+            {
+                PushTo = new List<string>() { ... },
+                PushTitle = "TEST 1",
+                PushBody = "TEST 1",
+                PushChannelId = "test"
+            };
+        PushTicketRequest pushTicketRequest2 = new PushTicketRequest()
+            {
+                PushTo = new List<string>() { ... },
+                PushTitle = "TEST 2",
+                PushBody = "TEST 2",
+                PushChannelId = "test"
+            };
+
+	PushTicketResponse result = await _client.SendPushAsync(
+		new List<PushTicketRequest>() { pushTicketRequest1, pushTicketRequest2 }
+		);
 
 	if (result?.PushTicketErrors?.Count() > 0) 
 	{
 		foreach (var error in result.PushTicketErrors) 
 		{
-			Console.WriteLine($"Error: {error.ErrorCode} - {error.ErrorMessage}");
+			// handle errors
 		}
 	}
 
@@ -50,37 +57,25 @@ using System.Linq;
 // notifications to devices that have blocked notifications or have uninstalled
 // your app. Expo does not control this policy and sends back the feedback from
 // Apple and Google so you can handle it appropriately.
-
-	var pushReceiptResult = await expoSDKClient.PushGetReceiptsAsync(pushReceiptReq);
+	
+	PushReceiptRequest pushReceiptRequest = new PushReceiptRequest() { PushTicketIds = new List<string>() { ... } };
+	PushReceiptResponse pushReceiptResult = await _client.GetReceiptsAsync(pushReceiptRequest);
 
 	if (pushReceiptResult?.ErrorInformations?.Count() > 0) 
 	{
 		foreach (var error in result.ErrorInformations) 
 		{
-			Console.WriteLine($"Error: {error.ErrorCode} - {error.ErrorMessage}");
+			// handle errors
 		}
 	}
 	foreach (var pushReceipt in pushReceiptResult.PushTicketReceipts) 
 	{
-		Console.WriteLine($"TicketId & Delivery Status: {pushReceipt.Key} {pushReceipt.Value.DeliveryStatus} {pushReceipt.Value.DeliveryMessage}");
+		// handle delivery status, etc
 	}
 ```
 
-
-## Developing
-
-The source code is in the `src/` directory.
-
-To build, use the .sln and msbuild
-
-
-## TODO
-
-  * Need to add unit tests
-
 ## See Also
 
+  * https://github.com/glyphard/expo-server-sdk-dotnet/
   * https://docs.expo.io/versions/latest/guides/push-notifications/
-  * https://github.com/expo/expo-server-sdk-node
-  * https://github.com/expo/expo-server-sdk-ruby
-  * https://github.com/expo/expo-server-sdk-python
+ 
