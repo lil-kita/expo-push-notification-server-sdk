@@ -10,8 +10,8 @@ Install package through NuGet - [Community.Expo.Server.SDK](https://www.nuget.or
 
 ```cs
 
-using Expo.Server.Client;
-using Expo.Server.Models;
+using ExpoCommunityNotificationServer.Client;
+using ExpoCommunityNotificationServer.Models;
 
 	private PushApiClient _client = new PushApiClient("your token here");
 	PushTicketRequest pushTicketRequest1 = new PushTicketRequest()

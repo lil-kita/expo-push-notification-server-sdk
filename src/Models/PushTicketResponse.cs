@@ -1,44 +1,32 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
 
-namespace Expo.Server.Models 
+namespace ExpoCommunityNotificationServer.Models
 {
-    [JsonObject (MemberSerialization.OptIn)]
-    public class PushTicketResponse 
+    [JsonObject(MemberSerialization.OptIn)]
+    public class PushTicketResponse
     {
-        [JsonProperty (PropertyName = "data")]
+        [JsonProperty(PropertyName = "data")]
         public List<PushTicketStatus> PushTicketStatuses { get; set; }
 
-        [JsonProperty (PropertyName = "errors")]
-        public List<PushTicketErrors> PushTicketErrors { get; set; }
+        [JsonProperty(PropertyName = "errors")]
+        public List<Error> PushTicketErrors { get; set; }
 
     }
 
-    [JsonObject (MemberSerialization.OptIn)]
-    public class PushTicketStatus 
+    [JsonObject(MemberSerialization.OptIn)]
+    public class PushTicketStatus
     {
-        [JsonProperty (PropertyName = "status")] //"error" | "ok",
+        [JsonProperty(PropertyName = "status")] //"error" | "ok",
         public string TicketStatus { get; set; }
 
-        [JsonProperty (PropertyName = "id")]
+        [JsonProperty(PropertyName = "id")]
         public string TicketId { get; set; }
 
-        [JsonProperty (PropertyName = "message")]
+        [JsonProperty(PropertyName = "message")]
         public string TicketMessage { get; set; }
 
-        [JsonProperty (PropertyName = "details")]
+        [JsonProperty(PropertyName = "details")]
         public object TicketDetails { get; set; }
-    }
-
-    [JsonObject (MemberSerialization.OptIn)]
-    public class PushTicketErrors 
-    {
-        [JsonProperty (PropertyName = "code")]
-        public string ErrorCode { get; set; }
-
-        [JsonProperty (PropertyName = "message")]
-        public string ErrorMessage { get; set; }
     }
 }

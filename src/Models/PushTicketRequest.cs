@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Expo.Server.Models
-{   
+namespace ExpoCommunityNotificationServer.Models
+{
     [JsonObject(MemberSerialization.OptIn)]
     public class PushTicketRequest
     {
@@ -26,13 +24,13 @@ namespace Expo.Server.Models
         [JsonProperty(PropertyName = "expiration")]
         public int? PushExpiration { get; set; }
 
-        [JsonProperty(PropertyName = "priority")]  
+        [JsonProperty(PropertyName = "priority")]
         public string PushPriority { get; set; } //'default' | 'normal' | 'high'
 
         [JsonProperty(PropertyName = "subtitle")]
         public string PushSubTitle { get; set; } // iOS only
 
-        [JsonProperty(PropertyName = "sound")] 
+        [JsonProperty(PropertyName = "sound")]
         public string PushSound { get; set; } // iOS only : 'default' | null	
 
         [JsonProperty(PropertyName = "badge")]
