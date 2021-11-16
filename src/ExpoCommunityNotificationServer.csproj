@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net5.0;netcoreapp2.2</TargetFrameworks>
+    <RootNamespace>ExpoCommunityNotificationServer</RootNamespace>
+    <Authors>Mikita Slaunikau, Ashley Messer</Authors>
+    <Company></Company>
+    <Description>Community Expo Server SDK for Push notifications</Description>
+    <Copyright>2021</Copyright>
+    <RepositoryUrl>https://github.com/lil-kita/expo-push-notification-server-sdk</RepositoryUrl>
+    <PackageTags>expo push notifications server</PackageTags>
+    <PackageId>Community.Expo.Server.SDK</PackageId>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <AssemblyName>Community.Expo.Server.SDK</AssemblyName>
+    <PackageReleaseNotes>add net6.0 support</PackageReleaseNotes>
+    <Version>1.0.3</Version>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/lil-kita/expo-push-notification-server-sdk</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+</Project>
