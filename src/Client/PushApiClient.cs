@@ -29,21 +29,23 @@ namespace Expo.Server.Client
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
-        public async Task<PushTicketResponse> SendPushAsync(List<PushTicketRequest> pushTicketRequest) // It may either be a single message object or a list of up to 100 message objects
+        // It may either be a single message object or a list of up to 100 message objects
+        public async Task<PushTicketResponse> SendPushAsync(List<PushTicketRequest> pushTicketRequest) 
         {
             StringContent requestBody = Serialize(pushTicketRequest);
             PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(_sendPushPath, requestBody);
             return ticketResponse;
         }
 
-        public async Task<PushResceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest) // Make sure you are only sending a list of 1000 (or less) ticket ID strings
+        // Make sure you are only sending a list of 1000 (or less) ticket ID strings
+        public async Task<PushResceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest) 
         {
             StringContent requestBody = Serialize(pushReceiptRequest);
             PushResceiptResponse receiptResponse = await PostAsync<PushResceiptResponse>(_getReceiptsPath, requestBody);
             return receiptResponse;
         }
 
-        private StringContent Serialize<T>(T obj) where T : class
+        private StringContent Serialize<TRequestModel>(TRequestModel obj) where TRequestModel : class
         {
             string serializedRequestObj = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
             {
@@ -52,14 +54,14 @@ namespace Expo.Server.Client
             return new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
         }
 
-        private async Task<U> PostAsync<U>(string path, StringContent requestBody)
+        private async Task<TResponseModel> PostAsync<TResponseModel>(string path, StringContent requestBody) where TResponseModel : class
         {
-            U responseBody = default;
+            TResponseModel responseBody = default;
             HttpResponseMessage response = await _httpClient.PostAsync(path, requestBody);
             if (response.IsSuccessStatusCode)
             {
                 string rawResponseBody = await response.Content.ReadAsStringAsync();
-                responseBody = JsonConvert.DeserializeObject<U>(rawResponseBody);
+                responseBody = JsonConvert.DeserializeObject<TResponseModel>(rawResponseBody);
             }
             return responseBody;
         }

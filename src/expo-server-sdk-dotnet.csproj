@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netcoreapp2.2</TargetFrameworks>
+    <TargetFrameworks>net6.0;net5.0;netcoreapp2.2</TargetFrameworks>
     <RootNamespace>Expo.Server</RootNamespace>
     <Authors>Mikita Slaunikau, Ashley Messer</Authors>
     <Company></Company>
@@ -13,8 +13,8 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>Community.Expo.Server.SDK</AssemblyName>
-    <PackageReleaseNotes>add netcoreapp2.2 support</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+    <PackageReleaseNotes>add net6.0 support</PackageReleaseNotes>
+    <Version>1.0.2</Version>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
