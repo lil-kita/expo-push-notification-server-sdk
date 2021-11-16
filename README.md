@@ -1,13 +1,17 @@
 # community-expo-push-notification-server-sdk
 ### created by [Ashley Messer](https://github.com/glyphard)
-### modified by Mikita Slaunikau
+### modified by [Mikita Slaunikau](https://github.com/lil-kita)
+
+## Installation
+
+Install package through NuGet - [Community.Expo.Server.SDK](https://www.nuget.org/packages/Community.Expo.Server.SDK/)
 
 ## Usage
 
 ```cs
 
-using expo_server_sdk_dotnet.Client;
-using expo_server_sdk_dotnet.Models;
+using ExpoCommunityNotificationServer.Client;
+using ExpoCommunityNotificationServer.Models;
 
 	private PushApiClient _client = new PushApiClient("your token here");
 	PushTicketRequest pushTicketRequest1 = new PushTicketRequest()
