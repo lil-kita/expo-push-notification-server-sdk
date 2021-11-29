@@ -34,4 +34,26 @@ namespace ExpoCommunityNotificationServer.Models
         [JsonProperty(PropertyName = "fault")]
         public string Fault { get; set; }
     }
+
+    public static class ResponseErrorTypes
+    {
+        public const string DeviceNotRegistered = "DeviceNotRegistered";
+
+        public const string MessageTooBig = "MessageTooBig";
+
+        public const string MessageRateExceeded = "MessageRateExceeded";
+
+        public const string MismatchSenderId = "MismatchSenderId";
+
+        public const string InvalidCredentials = "InvalidCredentials";
+    }
+
+    public static class RequestErrorTypes
+    {
+        public const string PUSH_TOO_MANY_EXPERIENCE_IDS = "PUSH_TOO_MANY_EXPERIENCE_IDS";
+
+        public const string PUSH_TOO_MANY_NOTIFICATIONS = "PUSH_TOO_MANY_NOTIFICATIONS";
+
+        public const string PUSH_TOO_MANY_RECEIPTS = "PUSH_TOO_MANY_RECEIPTS";
+    }
 }
