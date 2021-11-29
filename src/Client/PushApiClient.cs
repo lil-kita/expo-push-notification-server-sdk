@@ -30,7 +30,7 @@ namespace ExpoCommunityNotificationServer.Client
         }
 
         // It may either be a single message object or a list of up to 100 message objects
-        public async Task<PushTicketResponse> SendPushAsync(List<PushTicketRequest> pushTicketRequest) 
+        public async Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest) 
         {
             StringContent requestBody = Serialize(pushTicketRequest);
             PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(_sendPushPath, requestBody);
@@ -45,7 +45,7 @@ namespace ExpoCommunityNotificationServer.Client
             return receiptResponse;
         }
 
-        private StringContent Serialize<TRequestModel>(TRequestModel obj) where TRequestModel : class
+        private static StringContent Serialize<TRequestModel>(TRequestModel obj) where TRequestModel : class
         {
             string serializedRequestObj = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
             {

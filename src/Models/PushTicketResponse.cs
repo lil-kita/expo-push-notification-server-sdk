@@ -4,18 +4,14 @@ using System.Collections.Generic;
 namespace ExpoCommunityNotificationServer.Models
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class PushTicketResponse
+    public class PushTicketResponse : Response
     {
         [JsonProperty(PropertyName = "data")]
         public List<PushTicketStatus> PushTicketStatuses { get; set; }
-
-        [JsonProperty(PropertyName = "errors")]
-        public List<Error> PushTicketErrors { get; set; }
-
     }
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class PushTicketStatus
+    public class PushTicketStatus : Status
     {
         [JsonProperty(PropertyName = "status")] //"error" | "ok",
         public string TicketStatus { get; set; }
@@ -25,8 +21,5 @@ namespace ExpoCommunityNotificationServer.Models
 
         [JsonProperty(PropertyName = "message")]
         public string TicketMessage { get; set; }
-
-        [JsonProperty(PropertyName = "details")]
-        public object TicketDetails { get; set; }
     }
 }

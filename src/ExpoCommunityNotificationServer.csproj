@@ -13,8 +13,8 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>Community.Expo.Server.SDK</AssemblyName>
-    <PackageReleaseNotes>add net6.0 support</PackageReleaseNotes>
-    <Version>1.0.3</Version>
+    <PackageReleaseNotes>fix response details</PackageReleaseNotes>
+    <Version>1.0.4</Version>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
