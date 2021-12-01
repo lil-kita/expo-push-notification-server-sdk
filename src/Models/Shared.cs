@@ -46,6 +46,8 @@ namespace ExpoCommunityNotificationServer.Models
         public const string MismatchSenderId = "MismatchSenderId";
 
         public const string InvalidCredentials = "InvalidCredentials";
+
+        public const string InvalidProviderToken = "InvalidProviderToken";
     }
 
     public static class RequestErrorTypes
