@@ -13,7 +13,7 @@ Install package through NuGet - [Community.Expo.Server.SDK](https://www.nuget.or
 using ExpoCommunityNotificationServer.Client;
 using ExpoCommunityNotificationServer.Models;
 
-	private PushApiClient _client = new PushApiClient("your token here");
+	private IPushApiClient _client = new PushApiClient("your token here");
 	PushTicketRequest pushTicketRequest1 = new PushTicketRequest()
             {
                 PushTo = new List<string>() { ... },

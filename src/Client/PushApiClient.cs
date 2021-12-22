@@ -1,14 +1,13 @@
 ﻿using ExpoCommunityNotificationServer.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace ExpoCommunityNotificationServer.Client
 {
-    public class PushApiClient
+    public class PushApiClient : IPushApiClient
     {
         private const string _expoBackendHost = "https://exp.host";
         private const string _sendPushPath = "/--/api/v2/push/send";
@@ -30,7 +29,7 @@ namespace ExpoCommunityNotificationServer.Client
         }
 
         // It may either be a single message object or a list of up to 100 message objects
-        public async Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest) 
+        public async Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest)
         {
             StringContent requestBody = Serialize(pushTicketRequest);
             PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(_sendPushPath, requestBody);
@@ -38,7 +37,7 @@ namespace ExpoCommunityNotificationServer.Client
         }
 
         // Make sure you are only sending a list of 1000 (or less) ticket ID strings
-        public async Task<PushResceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest) 
+        public async Task<PushResceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
         {
             StringContent requestBody = Serialize(pushReceiptRequest);
             PushResceiptResponse receiptResponse = await PostAsync<PushResceiptResponse>(_getReceiptsPath, requestBody);

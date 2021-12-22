@@ -35,6 +35,13 @@ namespace ExpoCommunityNotificationServer.Models
         public string Fault { get; set; }
     }
 
+    public static class ResponseStatusTypes
+    {
+        public const string Ok = "ok";
+
+        public const string Error = "error";
+    }
+
     public static class ResponseErrorTypes
     {
         public const string DeviceNotRegistered = "DeviceNotRegistered";
@@ -46,6 +53,9 @@ namespace ExpoCommunityNotificationServer.Models
         public const string MismatchSenderId = "MismatchSenderId";
 
         public const string InvalidCredentials = "InvalidCredentials";
+
+        public const string InvalidProviderToken = "InvalidProviderToken";
+
     }
 
     public static class RequestErrorTypes
