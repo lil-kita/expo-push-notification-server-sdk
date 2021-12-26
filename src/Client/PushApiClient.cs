@@ -67,11 +67,16 @@ namespace ExpoCommunityNotificationServer.Client
         /// <param name="pushTicketRequest">Push notification object or an array of up to 100 objects</param>
         /// <returns>Response with statuses and other info about sent push notifications</returns>
         /// <exception cref="InvalidTokenException">Token was not set</exception>
+        /// <exception cref="InvalidRequestException">PushTicketMessages count should be >0 and <=100</exception>
         public async Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest)
         {
             if (!_httpClient.IsTokenSet())
             {
                 throw new InvalidTokenException("Token was not set");
+            }
+            if (!pushTicketRequest.IsPushMessagesInValidRange())
+            {
+                throw new InvalidRequestException(nameof(pushTicketRequest), "PushTicketMessages count should be >0 and <=100");
             }
 
             StringContent requestBody = Serialize(pushTicketRequest);
@@ -87,11 +92,16 @@ namespace ExpoCommunityNotificationServer.Client
         /// <param name="pushReceiptRequest">Request that contains list of 1000 (or less) ticket ID strings</param>
         /// <returns>Response with requested receipts</returns>
         /// <exception cref="InvalidTokenException">Token was not set</exception>
+        /// <exception cref="InvalidRequestException">PushTicketIds count should be >0 and <=1000</exception>
         public async Task<PushResceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
         {
             if (!_httpClient.IsTokenSet())
             {
                 throw new InvalidTokenException("Token was not set");
+            }
+            if (!pushReceiptRequest.IsReceiptRequestInValidRange())
+            {
+                throw new InvalidRequestException(nameof(pushReceiptRequest), "PushTicketIds count should be >0 and <=1000");
             }
 
             StringContent requestBody = Serialize(pushReceiptRequest);
