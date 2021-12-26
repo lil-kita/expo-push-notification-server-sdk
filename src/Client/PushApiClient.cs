@@ -35,6 +35,7 @@ namespace ExpoCommunityNotificationServer.Client
         /// Create client with auth token
         /// </summary>
         /// <param name="token">Expo auth token</param>
+        /// <exception cref="InvalidTokenException">Token is null, empty or white space</exception>
         public PushApiClient(string token)
         {
             _httpHandler = new HttpClientHandler() { MaxConnectionsPerServer = 6 };
@@ -42,7 +43,14 @@ namespace ExpoCommunityNotificationServer.Client
             {
                 BaseAddress = new Uri(_expoBackendHost)
             };
-            SetToken(token);
+            try
+            {
+                SetToken(token);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         /// <summary>
