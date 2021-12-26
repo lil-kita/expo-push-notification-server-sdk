@@ -10,6 +10,7 @@ Install package through NuGet - [Community.Expo.Server.SDK](https://www.nuget.or
 
 ```cs
 
+using ExpoCommunityNotificationServer.Exceptions;
 using ExpoCommunityNotificationServer.Client;
 using ExpoCommunityNotificationServer.Models;
 
