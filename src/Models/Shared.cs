@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ExpoCommunityNotificationServer.Models
 {   
+    /// <summary>
+    /// Base response class
+    /// </summary>
     public class Response
     {
         [JsonProperty(PropertyName = "errors")]
@@ -42,6 +45,9 @@ namespace ExpoCommunityNotificationServer.Models
         public const string Error = "error";
     }
 
+    /// <summary>
+    /// Possible Expo response errors
+    /// </summary>
     public static class ResponseErrorTypes
     {
         public const string DeviceNotRegistered = "DeviceNotRegistered";
@@ -58,6 +64,9 @@ namespace ExpoCommunityNotificationServer.Models
 
     }
 
+    /// <summary>
+    /// Possible Expo request errors
+    /// </summary>
     public static class RequestErrorTypes
     {
         public const string PUSH_TOO_MANY_EXPERIENCE_IDS = "PUSH_TOO_MANY_EXPERIENCE_IDS";

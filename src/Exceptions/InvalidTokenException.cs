@@ -2,6 +2,9 @@
 
 namespace ExpoCommunityNotificationServer.Exceptions
 {
+    /// <summary>
+    /// The exception that is thrown when smth wrong with expo token
+    /// </summary>
     [Serializable()]
     public class InvalidTokenException : ArgumentNullException
     {

@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace ExpoCommunityNotificationServer.Client
 {
+    /// <summary>
+    /// Provides a class for sending push notifications using Expo server
+    /// </summary>
     public class PushApiClient : IPushApiClient
     {
         private const string _expoBackendHost = "https://exp.host";

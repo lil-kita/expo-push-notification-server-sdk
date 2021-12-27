@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ExpoCommunityNotificationServer.Models
 {
+    /// <summary>
+    /// Class represents response model for getting push receipts
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class PushResceiptResponse : Response
     {

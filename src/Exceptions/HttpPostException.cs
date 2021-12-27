@@ -4,6 +4,9 @@ using System.Net.Http;
 
 namespace ExpoCommunityNotificationServer.Exceptions
 {
+    /// <summary>
+    /// The exception that is thrown when exception is thrown by HttpClient or StatusCode is not successfull
+    /// </summary>
     [Serializable()]
     public class HttpPostException : HttpRequestException
     {
