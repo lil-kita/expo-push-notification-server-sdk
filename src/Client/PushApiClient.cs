@@ -19,8 +19,8 @@ namespace ExpoCommunityNotificationServer.Client
         private readonly HttpClient _httpClient;
 
         /// <summary>
-        /// Create client without auth token
-        /// Make sure to set token before using before sending push notification or getting reciepts
+        /// Client without auth token.
+        /// Make sure to set token before using before sending push notification or getting reciepts.
         /// </summary>
         public PushApiClient()
         {
@@ -32,10 +32,10 @@ namespace ExpoCommunityNotificationServer.Client
         }
 
         /// <summary>
-        /// Create client with auth token
+        /// Client with auth token.
         /// </summary>
-        /// <param name="token">Expo auth token</param>
-        /// <exception cref="InvalidTokenException">Token is null, empty or white space</exception>
+        /// <param name="token">Expo auth token.</param>
+        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
         public PushApiClient(string token)
         {
             _httpHandler = new HttpClientHandler() { MaxConnectionsPerServer = 6 };
@@ -54,10 +54,10 @@ namespace ExpoCommunityNotificationServer.Client
         }
 
         /// <summary>
-        /// Set new auth token or replace old one
+        /// Set new auth token or replace old one.
         /// </summary>
-        /// <param name="token">Expo auth token</param>
-        /// <exception cref="InvalidTokenException">Token is null, empty or white space</exception>
+        /// <param name="token">Expo auth token.</param>
+        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
         public void SetToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
@@ -69,13 +69,13 @@ namespace ExpoCommunityNotificationServer.Client
         }
 
         /// <summary>
-        /// Send push notification
-        /// It may either be a single message object or an array of up to 100 message objects
+        /// Send push notification.
+        /// It may either be a single message object or an array of up to 100 message objects.
         /// </summary>
-        /// <param name="pushTicketRequest">Push notification object or an array of up to 100 objects</param>
-        /// <returns>Response with statuses and other info about sent push notifications</returns>
-        /// <exception cref="InvalidTokenException">Token was not set</exception>
-        /// <exception cref="InvalidRequestException">PushTicketMessages count should be >0 and <=100</exception>
+        /// <param name="pushTicketRequest">Push notification object or an array of up to 100 objects.</param>
+        /// <returns>Response with statuses and other info about sent push notifications.</returns>
+        /// <exception cref="InvalidTokenException">Token was not set.</exception>
+        /// <exception cref="InvalidRequestException">PushTicketMessages count must be between 1 and 100.</exception>
         public async Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest)
         {
             if (!_httpClient.IsTokenSet())
@@ -94,13 +94,13 @@ namespace ExpoCommunityNotificationServer.Client
 
 
         /// <summary>
-        /// Send request to get push notification receipts
-        /// Make sure you are only sending a list of 1000 (or less) ticket ID strings
+        /// Send request to get push notification receipts.
+        /// Make sure you are only sending a list of 1000 (or less) ticket ID strings.
         /// </summary>
-        /// <param name="pushReceiptRequest">Request that contains list of 1000 (or less) ticket ID strings</param>
-        /// <returns>Response with requested receipts</returns>
-        /// <exception cref="InvalidTokenException">Token was not set</exception>
-        /// <exception cref="InvalidRequestException">PushTicketIds count should be >0 and <=1000</exception>
+        /// <param name="pushReceiptRequest">Request that contains list of 1000 (or less) ticket ID strings.</param>
+        /// <returns>Response with requested receipts.</returns>
+        /// <exception cref="InvalidTokenException">Token was not set.</exception>
+        /// <exception cref="InvalidRequestException">PushTicketIds must be between 1 and 1000.</exception>
         public async Task<PushResceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
         {
             if (!_httpClient.IsTokenSet())
