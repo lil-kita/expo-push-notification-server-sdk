@@ -3,9 +3,11 @@ using System.Net.Http;
 
 namespace ExpoCommunityNotificationServer.Exceptions
 {
-    internal class HttpPostException : HttpRequestException
+    public class HttpPostException : HttpRequestException
     {
         private readonly HttpStatusCode _status;
+
+        public HttpPostException() : base() { }
 
         public HttpPostException(HttpStatusCode status) : base()
         {

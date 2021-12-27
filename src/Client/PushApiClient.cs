@@ -76,6 +76,7 @@ namespace ExpoCommunityNotificationServer.Client
         /// <returns>Response with statuses and other info about sent push notifications.</returns>
         /// <exception cref="InvalidTokenException">Token was not set.</exception>
         /// <exception cref="InvalidRequestException">PushTicketMessages count must be between 1 and 100.</exception>
+        /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
         public async Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest)
         {
             if (!_httpClient.IsTokenSet())
@@ -87,9 +88,16 @@ namespace ExpoCommunityNotificationServer.Client
                 throw new InvalidRequestException(nameof(pushTicketRequest), "PushTicketMessages count should be >0 and <=100");
             }
 
-            StringContent requestBody = Serialize(pushTicketRequest);
-            PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(_sendPushPath, requestBody);
-            return ticketResponse;
+            try
+            {
+                StringContent requestBody = Serialize(pushTicketRequest);
+                PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(_sendPushPath, requestBody);
+                return ticketResponse;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
 
@@ -101,6 +109,7 @@ namespace ExpoCommunityNotificationServer.Client
         /// <returns>Response with requested receipts.</returns>
         /// <exception cref="InvalidTokenException">Token was not set.</exception>
         /// <exception cref="InvalidRequestException">PushTicketIds must be between 1 and 1000.</exception>
+        /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
         public async Task<PushResceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
         {
             if (!_httpClient.IsTokenSet())
@@ -112,9 +121,16 @@ namespace ExpoCommunityNotificationServer.Client
                 throw new InvalidRequestException(nameof(pushReceiptRequest), "PushTicketIds count should be >0 and <=1000");
             }
 
-            StringContent requestBody = Serialize(pushReceiptRequest);
-            PushResceiptResponse receiptResponse = await PostAsync<PushResceiptResponse>(_getReceiptsPath, requestBody);
-            return receiptResponse;
+            try
+            {
+                StringContent requestBody = Serialize(pushReceiptRequest);
+                PushResceiptResponse receiptResponse = await PostAsync<PushResceiptResponse>(_getReceiptsPath, requestBody);
+                return receiptResponse;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         private static StringContent Serialize<TRequestModel>(TRequestModel obj) where TRequestModel : class
@@ -129,11 +145,23 @@ namespace ExpoCommunityNotificationServer.Client
         private async Task<TResponseModel> PostAsync<TResponseModel>(string path, StringContent requestBody) where TResponseModel : class
         {
             TResponseModel responseBody = default;
-            HttpResponseMessage response = await _httpClient.PostAsync(path, requestBody);
+            HttpResponseMessage response = default;
+            try
+            {
+                response = await _httpClient.PostAsync(path, requestBody);
+            }
+            catch
+            {
+                throw new HttpPostException();
+            }
             if (response.IsSuccessStatusCode)
             {
                 string rawResponseBody = await response.Content.ReadAsStringAsync();
                 responseBody = JsonConvert.DeserializeObject<TResponseModel>(rawResponseBody);
+            }
+            else
+            {
+                throw new HttpPostException(response.StatusCode);
             }
             return responseBody;
         }
