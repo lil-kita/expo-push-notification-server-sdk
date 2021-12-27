@@ -1,8 +1,10 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 
 namespace ExpoCommunityNotificationServer.Exceptions
 {
+    [Serializable()]
     public class HttpPostException : HttpRequestException
     {
         private readonly HttpStatusCode _status;

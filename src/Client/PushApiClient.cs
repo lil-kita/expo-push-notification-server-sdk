@@ -54,7 +54,7 @@ namespace ExpoCommunityNotificationServer.Client
         }
 
         /// <summary>
-        /// Set new auth token or replace old one.
+        /// Set new auth token or replace the old one.
         /// </summary>
         /// <param name="token">Expo auth token.</param>
         /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
