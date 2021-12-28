@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ExpoCommunityNotificationServer.Models
 {
+    /// <summary>
+    /// Class represents response model for sending push notifications
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class PushTicketResponse : Response
     {
@@ -13,7 +16,10 @@ namespace ExpoCommunityNotificationServer.Models
     [JsonObject(MemberSerialization.OptIn)]
     public class PushTicketStatus : Status
     {
-        [JsonProperty(PropertyName = "status")] //"error" | "ok",
+        /// <summary>
+        /// "error" | "ok"
+        /// </summary>
+        [JsonProperty(PropertyName = "status")]
         public string TicketStatus { get; set; }
 
         [JsonProperty(PropertyName = "id")]
