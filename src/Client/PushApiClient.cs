@@ -114,13 +114,14 @@ namespace ExpoCommunityNotificationServer.Client
         /// Make sure you are only sending a list of 1000 (or less) ticket ID strings.
         /// </summary>
         /// <param name="pushReceiptRequest">Request that contains list of 1000 (or less) ticket ID strings.</param>
+        /// <param name="isTokenRequired">Is Access Token required. Default value is true.</param>
         /// <returns>Response with requested receipts.</returns>
         /// <exception cref="InvalidTokenException">Token was not set.</exception>
         /// <exception cref="InvalidRequestException">PushTicketIds must be between 1 and 1000.</exception>
         /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
-        public async Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
+        public async Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest, bool isTokenRequired = true)
         {
-            if (!_httpClient.IsTokenSet())
+            if (isTokenRequired && !_httpClient.IsTokenSet())
             {
                 throw new InvalidTokenException("Token was not set");
             }
