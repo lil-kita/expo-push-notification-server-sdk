@@ -36,6 +36,6 @@ namespace ExpoCommunityNotificationServer.Client
         /// <exception cref="InvalidTokenException">Token was not set.</exception>
         /// <exception cref="InvalidRequestException">PushTicketIds must be between 1 and 1000.</exception>
         /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
-        Task<PushResceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest);
+        Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest);
     }
 }

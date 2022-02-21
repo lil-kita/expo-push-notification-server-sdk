@@ -113,7 +113,7 @@ namespace ExpoCommunityNotificationServer.Client
         /// <exception cref="InvalidTokenException">Token was not set.</exception>
         /// <exception cref="InvalidRequestException">PushTicketIds must be between 1 and 1000.</exception>
         /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
-        public async Task<PushResceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
+        public async Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
         {
             if (!_httpClient.IsTokenSet())
             {
@@ -127,7 +127,7 @@ namespace ExpoCommunityNotificationServer.Client
             try
             {
                 StringContent requestBody = Serialize(pushReceiptRequest);
-                PushResceiptResponse receiptResponse = await PostAsync<PushResceiptResponse>(_getReceiptsPath, requestBody);
+                PushReceiptResponse receiptResponse = await PostAsync<PushReceiptResponse>(_getReceiptsPath, requestBody);
                 return receiptResponse;
             }
             catch
