@@ -72,6 +72,12 @@ namespace ExpoCommunityNotificationServer.Client
         }
 
         /// <summary>
+        /// Check is Access Token already set
+        /// </summary>
+        /// <returns>True if token was set</returns>
+        public bool IsTokenSet() => _httpClient.IsTokenSet();
+
+        /// <summary>
         /// Send push notification.
         /// It may either be a single message object or an array of up to 100 message objects.
         /// </summary>
@@ -102,7 +108,6 @@ namespace ExpoCommunityNotificationServer.Client
                 throw;
             }
         }
-
 
         /// <summary>
         /// Send request to get push notification receipts.

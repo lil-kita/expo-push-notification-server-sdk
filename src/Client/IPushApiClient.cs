@@ -17,6 +17,12 @@ namespace ExpoCommunityNotificationServer.Client
         void SetToken(string token);
 
         /// <summary>
+        /// Check is Access Token already set
+        /// </summary>
+        /// <returns>True if token was set</returns>
+        bool IsTokenSet();
+
+        /// <summary>
         /// Send push notification.
         /// It may either be a single message object or an array of up to 100 message objects.
         /// </summary>
