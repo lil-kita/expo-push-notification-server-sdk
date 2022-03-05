@@ -1,78 +1,45 @@
 # community-expo-push-notification-server-sdk
-### created by [Ashley Messer](https://github.com/glyphard)
-### modified by [Mikita Slaunikau](https://github.com/lil-kita)
-
 ## Installation
 
 Install package through NuGet - [Community.Expo.Server.SDK](https://www.nuget.org/packages/Community.Expo.Server.SDK/)
 
 ## Usage
 
+### Send push notification
+
 ```cs
-
-using ExpoCommunityNotificationServer.Exceptions;
-using ExpoCommunityNotificationServer.Client;
-using ExpoCommunityNotificationServer.Models;
-
-	private IPushApiClient _client = new PushApiClient("your token here");
-	PushTicketRequest pushTicketRequest1 = new PushTicketRequest()
+	IPushApiClient _client = new PushApiClient("your token here");
+	PushTicketRequest pushTicketRequest = new PushTicketRequest()
             {
                 PushTo = new List<string>() { ... },
                 PushTitle = "TEST 1",
                 PushBody = "TEST 1",
                 PushChannelId = "test"
             };
-        PushTicketRequest pushTicketRequest2 = new PushTicketRequest()
-            {
-                PushTo = new List<string>() { ... },
-                PushTitle = "TEST 2",
-                PushBody = "TEST 2",
-                PushChannelId = "test"
-            };
 
-	PushTicketResponse result = await _client.SendPushAsync(
-		new List<PushTicketRequest>() { pushTicketRequest1, pushTicketRequest2 }
-		);
+	PushTicketResponse result = await _client.SendPushAsync(pushTicketRequest);
+```
+If no errors, then wait for a few moments for the notifications to be delivered.   
+Then request receipts for each push ticket.  
 
-	if (result?.PushTicketErrors?.Count() > 0) 
-	{
-		foreach (var error in result.PushTicketErrors) 
-		{
-			// handle errors
-		}
-	}
+Later, after the Expo push notification service has delivered the notifications to Apple or Google (usually quickly, but allow the the service up to 30 minutes when under load),  
+a "receipt" for each notification is created.  
+The receipts will be available for at least a day; stale receipts are deleted.
 
-//If no errors, then wait for a few moments for the notifications to be delivered
-//Then request receipts for each push ticket
+### Get push notification receipts
 
-...
+The ID of each receipt is sent back in the response "ticket" for each notification.  
+In summary, sending a notification produces a ticket, which contains a receipt ID you later use to get the receipt.  
 
-// Later, after the Expo push notification service has delivered the
-// notifications to Apple or Google (usually quickly, but allow the the service
-// up to 30 minutes when under load), a "receipt" for each notification is
-// created. The receipts will be available for at least a day; stale receipts
-// are deleted.
-//
-// The ID of each receipt is sent back in the response "ticket" for each
-// notification. In summary, sending a notification produces a ticket, which
-// contains a receipt ID you later use to get the receipt.
-//
-// The receipts may contain error codes to which you must respond. In
-// particular, Apple or Google may block apps that continue to send
-// notifications to devices that have blocked notifications or have uninstalled
-// your app. Expo does not control this policy and sends back the feedback from
-// Apple and Google so you can handle it appropriately.
-	
+The receipts may contain error codes to which you must respond.  
+In particular, Apple or Google may block apps that continue to send notifications to devices that have blocked notifications or have uninstalled your app.  
+Expo does not control this policy and sends back the feedback from Apple and Google so you can handle it appropriately.
+
+```cs
+	IPushApiClient _client = new PushApiClient("your token here");
 	PushReceiptRequest pushReceiptRequest = new PushReceiptRequest() { PushTicketIds = new List<string>() { ... } };
 	PushReceiptResponse pushReceiptResult = await _client.GetReceiptsAsync(pushReceiptRequest);
 
-	if (pushReceiptResult?.ErrorInformations?.Count() > 0) 
-	{
-		foreach (var error in result.ErrorInformations) 
-		{
-			// handle errors
-		}
-	}
 	foreach (var pushReceipt in pushReceiptResult.PushTicketReceipts) 
 	{
 		// handle delivery status, etc
