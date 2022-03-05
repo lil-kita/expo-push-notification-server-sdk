@@ -34,6 +34,18 @@ namespace ExpoCommunityNotificationServer.Client
         Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest);
 
         /// <summary>
+        /// Send push notification.
+        /// It may either be a single message object or an array of up to 100 message objects.
+        /// </summary>
+        /// <param name="pushTicketRequest">Push notification object or an array of up to 100 objects.</param>
+        /// <param name="isTokenRequired">Is Access Token required. Default value is true.</param>
+        /// <returns>Response with statuses and other info about sent push notifications.</returns>
+        /// <exception cref="InvalidTokenException">Token was not set.</exception>
+        /// <exception cref="InvalidRequestException">PushTicketMessages count must be between 1 and 100.</exception>
+        /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
+        Task<PushTicketResponse> SendPushAsync(PushTicketRequest[] pushTicketRequest, bool isTokenRequired = true);
+
+        /// <summary>
         /// Send request to get push notification receipts.
         /// Make sure you are only sending a list of 1000 (or less) ticket ID strings.
         /// </summary>
