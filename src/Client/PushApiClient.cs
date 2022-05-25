@@ -16,11 +16,33 @@ namespace ExpoCommunityNotificationServer.Client
         public PushApiClient() : base() { }
 
         /// <summary>
+        /// Client without auth token. Set auth token before sending request
+        /// </summary>
+        /// <param name="httpClient">Custom HttpClient object</param>
+        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+        public PushApiClient(HttpClient httpClient) : base(httpClient) { }
+
+        /// <summary>
         /// Client with auth token.
         /// </summary>
         /// <param name="token">Expo auth token.</param>
         /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
         public PushApiClient(string token) : base(token) { }
+
+        /// <summary>
+        /// Client with auth token.
+        /// </summary>
+        /// <param name="token">Expo auth token.</param>
+        /// <param name="httpClient">Custom HttpClient object</param>
+        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+        public PushApiClient(string token, HttpClient httpClient) : base(token, httpClient) { }
+
+        /// <summary>
+        /// Set new auth token or replace the old one.
+        /// </summary>
+        /// <param name="token">Expo auth token.</param>
+        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+        public override void SetToken(string token) => ValidateAndSetToken(token);
 
         /// <summary>
         /// Send push notification.

@@ -17,9 +17,19 @@ namespace ExpoCommunityNotificationServer.Client
 
         private readonly HttpClient _httpClient;
 
+        protected BaseClient(string token, HttpClient httpClient) : this(httpClient)
+        {
+            ValidateAndSetToken(token);
+        }
+
         protected BaseClient(string token) : this()
         {
-            SetToken(token);
+            ValidateAndSetToken(token);
+        }
+
+        protected BaseClient(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
         }
 
         protected BaseClient()
@@ -28,15 +38,13 @@ namespace ExpoCommunityNotificationServer.Client
         }
 
         public abstract Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest);
-
         public abstract Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest);
+        public abstract void SetToken(string token);
 
-        /// <summary>
-        /// Set new auth token or replace the old one.
-        /// </summary>
-        /// <param name="token">Expo auth token.</param>
-        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
-        public void SetToken(string token)
+        protected static string SendPushPath => _sendPushPath;
+        protected static string GetReceiptsPath => _getReceiptsPath;
+
+        protected void ValidateAndSetToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
@@ -45,10 +53,6 @@ namespace ExpoCommunityNotificationServer.Client
 
             SetAuthenticationToken(token);
         }
-
-        protected static string SendPushPath => _sendPushPath;
-
-        protected static string GetReceiptsPath => _getReceiptsPath;
 
         protected static StringContent Serialize<TRequestModel>(TRequestModel obj) where TRequestModel : class
         {
