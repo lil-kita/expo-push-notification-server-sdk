@@ -11,6 +11,11 @@ namespace ExpoCommunityNotificationServer.Client
     public sealed class PushApiClient : BaseClient
     {
         /// <summary>
+        /// Client without auth token. Set auth token before sending request
+        /// </summary>
+        public PushApiClient() : base() { }
+
+        /// <summary>
         /// Client with auth token.
         /// </summary>
         /// <param name="token">Expo auth token.</param>

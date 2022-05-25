@@ -15,17 +15,16 @@ namespace ExpoCommunityNotificationServer.Client
         private const string _sendPushPath = "/--/api/v2/push/send";
         private const string _getReceiptsPath = "/--/api/v2/push/getReceipts";
 
-        private readonly HttpClientHandler _httpHandler;
         private readonly HttpClient _httpClient;
 
-        protected BaseClient(string token)
+        protected BaseClient(string token) : this()
         {
-            _httpHandler = new HttpClientHandler() { MaxConnectionsPerServer = 6 };
-            _httpClient = new HttpClient(_httpHandler)
-            {
-                BaseAddress = new Uri(_expoBackendHost)
-            };
             SetToken(token);
+        }
+
+        protected BaseClient()
+        {
+            _httpClient = new HttpClient() { BaseAddress = new Uri(_expoBackendHost) };
         }
 
         public abstract Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest);
