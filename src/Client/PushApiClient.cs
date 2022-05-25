@@ -30,8 +30,8 @@ namespace ExpoCommunityNotificationServer.Client
         {
             Validate(pushTicketRequest);
             StringContent requestBody = Serialize(pushTicketRequest);
-            PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(SendPushPath, requestBody);
-            return ticketResponse;
+
+            return await PostAsync<PushTicketResponse>(SendPushPath, requestBody);
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace ExpoCommunityNotificationServer.Client
         {
             Validate(pushReceiptRequest);
             StringContent requestBody = Serialize(pushReceiptRequest);
-            PushReceiptResponse receiptResponse = await PostAsync<PushReceiptResponse>(GetReceiptsPath, requestBody);
-            return receiptResponse;
+
+            return await PostAsync<PushReceiptResponse>(GetReceiptsPath, requestBody);
         }
     }
 }

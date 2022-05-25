@@ -83,29 +83,31 @@ namespace ExpoCommunityNotificationServer.Client
             return responseBody;
         }
 
-        protected void Validate<T>(T model)
+        protected void Validate(PushReceiptRequest receiptRequest)
+        {
+            Validate();
+
+            if (!receiptRequest.IsReceiptRequestInValidRange())
+            {
+                throw new InvalidRequestException(typeof(PushReceiptRequest).Name, "PushTicketIds count should be >0 and <=1000");
+            }
+        }
+
+        protected void Validate(PushTicketRequest[] ticketRequest)
+        {
+            Validate();
+;
+            if (!ticketRequest.IsPushMessagesInValidRange())
+            {
+                throw new InvalidRequestException(typeof(PushTicketRequest).Name, "PushTicketMessages count should be >0 and <=100");
+            }
+        }
+
+        private void Validate()
         {
             if (!_httpClient.IsTokenSet())
             {
                 throw new InvalidTokenException("Token was not set");
-            }
-
-            bool isValid = true;
-            string error = string.Empty;
-            if (model is PushReceiptRequest receiptRequest)
-            {
-                isValid = receiptRequest.IsReceiptRequestInValidRange();
-                error = "PushTicketIds count should be >0 and <=1000";
-            }
-            else if (model is PushTicketRequest[] ticketRequest)
-            {
-                isValid = ticketRequest.IsPushMessagesInValidRange();
-                error = "PushTicketMessages count should be >0 and <=100";
-            }
-
-            if (!isValid)
-            {
-                throw new InvalidRequestException(typeof(T).Name, error);
             }
         }
 
