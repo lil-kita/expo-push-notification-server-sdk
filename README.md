@@ -3,8 +3,8 @@
 
 Install package through NuGet - [Community.Expo.Server.SDK](https://www.nuget.org/packages/Community.Expo.Server.SDK/)  
 
-To send requests without access token use version *1.1.2*   
-Since version *1.2.0* access token is required
+To send requests without access token use version **1.1.2**   
+Since version **1.2.0** access token is required
 
 ## Usage
 
