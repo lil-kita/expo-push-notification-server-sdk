@@ -34,14 +34,7 @@ namespace ExpoCommunityNotificationServer.Client
         /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
         public override async Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest)
         {
-            try
-            {
-                return await SendPushAsync(pushTicketRequest, true);
-            }
-            catch
-            {
-                throw;
-            }
+            return await SendPushAsync(pushTicketRequest, true);
         }
 
         /// <summary>
@@ -56,17 +49,10 @@ namespace ExpoCommunityNotificationServer.Client
         /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
         public override async Task<PushTicketResponse> SendPushAsync(PushTicketRequest[] pushTicketRequest, bool isTokenRequired = true)
         {
-            try
-            {
-                Validate(pushTicketRequest, isTokenRequired);
-                StringContent requestBody = Serialize(pushTicketRequest);
-                PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(SendPushPath(), requestBody);
-                return ticketResponse;
-            }
-            catch
-            {
-                throw;
-            }
+            Validate(pushTicketRequest, isTokenRequired);
+            StringContent requestBody = Serialize(pushTicketRequest);
+            PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(SendPushPath(), requestBody);
+            return ticketResponse;
         }
 
         /// <summary>
@@ -81,17 +67,10 @@ namespace ExpoCommunityNotificationServer.Client
         /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
         public override async Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest, bool isTokenRequired = true)
         {
-            try
-            {
-                Validate(pushReceiptRequest, isTokenRequired);
-                StringContent requestBody = Serialize(pushReceiptRequest);
-                PushReceiptResponse receiptResponse = await PostAsync<PushReceiptResponse>(GetReceiptsPath(), requestBody);
-                return receiptResponse;
-            }
-            catch
-            {
-                throw;
-            }
+            Validate(pushReceiptRequest, isTokenRequired);
+            StringContent requestBody = Serialize(pushReceiptRequest);
+            PushReceiptResponse receiptResponse = await PostAsync<PushReceiptResponse>(GetReceiptsPath(), requestBody);
+            return receiptResponse;
         }
     }
 }

@@ -34,14 +34,7 @@ namespace ExpoCommunityNotificationServer.Client
             {
                 BaseAddress = new Uri(_expoBackendHost)
             };
-            try
-            {
-                SetToken(token);
-            }
-            catch
-            {
-                throw;
-            }
+            SetToken(token);
         }
 
         public abstract Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest);
@@ -77,17 +70,14 @@ namespace ExpoCommunityNotificationServer.Client
 
         protected static StringContent Serialize<TRequestModel>(TRequestModel obj) where TRequestModel : class
         {
-            string serializedRequestObj = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            });
+            string serializedRequestObj = JsonConvert.SerializeObject(obj, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             return new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
         }
 
         protected async Task<TResponseModel> PostAsync<TResponseModel>(string path, StringContent requestBody) where TResponseModel : class
         {
-            TResponseModel responseBody = default;
-            HttpResponseMessage response = default;
+            TResponseModel responseBody;
+            HttpResponseMessage response;
             try
             {
                 response = await _httpClient.PostAsync(path, requestBody);
@@ -96,6 +86,7 @@ namespace ExpoCommunityNotificationServer.Client
             {
                 throw new HttpPostException();
             }
+
             if (response.IsSuccessStatusCode)
             {
                 string rawResponseBody = await response.Content.ReadAsStringAsync();
@@ -105,6 +96,7 @@ namespace ExpoCommunityNotificationServer.Client
             {
                 throw new HttpPostException(response.StatusCode);
             }
+
             return responseBody;
         }
 
