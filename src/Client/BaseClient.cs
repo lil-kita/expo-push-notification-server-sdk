@@ -18,15 +18,6 @@ namespace ExpoCommunityNotificationServer.Client
         private readonly HttpClientHandler _httpHandler;
         private readonly HttpClient _httpClient;
 
-        protected BaseClient()
-        {
-            _httpHandler = new HttpClientHandler() { MaxConnectionsPerServer = 6 };
-            _httpClient = new HttpClient(_httpHandler)
-            {
-                BaseAddress = new Uri(_expoBackendHost)
-            };
-        }
-
         protected BaseClient(string token)
         {
             _httpHandler = new HttpClientHandler() { MaxConnectionsPerServer = 6 };
@@ -39,9 +30,7 @@ namespace ExpoCommunityNotificationServer.Client
 
         public abstract Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest);
 
-        public abstract Task<PushTicketResponse> SendPushAsync(PushTicketRequest[] pushTicketRequest, bool isTokenRequired = true);
-
-        public abstract Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest, bool isTokenRequired = true);
+        public abstract Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest);
 
         /// <summary>
         /// Set new auth token or replace the old one.
@@ -58,15 +47,9 @@ namespace ExpoCommunityNotificationServer.Client
             SetAuthenticationToken(token);
         }
 
-        /// <summary>
-        /// Check is Access Token already set
-        /// </summary>
-        /// <returns>True if token was set</returns>
-        public bool IsTokenSet() => _httpClient.IsTokenSet();
+        protected static string SendPushPath => _sendPushPath;
 
-        protected static string SendPushPath() => _sendPushPath;
-
-        protected static string GetReceiptsPath() => _getReceiptsPath;
+        protected static string GetReceiptsPath => _getReceiptsPath;
 
         protected static StringContent Serialize<TRequestModel>(TRequestModel obj) where TRequestModel : class
         {
@@ -100,9 +83,9 @@ namespace ExpoCommunityNotificationServer.Client
             return responseBody;
         }
 
-        protected void Validate<T>(T model, bool isTokenRequired = true)
+        protected void Validate<T>(T model)
         {
-            if (isTokenRequired && !_httpClient.IsTokenSet())
+            if (!_httpClient.IsTokenSet())
             {
                 throw new InvalidTokenException("Token was not set");
             }

@@ -11,12 +11,6 @@ namespace ExpoCommunityNotificationServer.Client
     public sealed class PushApiClient : BaseClient
     {
         /// <summary>
-        /// Client without auth token.
-        /// Make sure to set token before using before sending push notification or getting reciepts.
-        /// </summary>
-        public PushApiClient() : base() { }
-
-        /// <summary>
         /// Client with auth token.
         /// </summary>
         /// <param name="token">Expo auth token.</param>
@@ -34,24 +28,9 @@ namespace ExpoCommunityNotificationServer.Client
         /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
         public override async Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest)
         {
-            return await SendPushAsync(pushTicketRequest, true);
-        }
-
-        /// <summary>
-        /// Send push notification.
-        /// It may either be a single message object or an array of up to 100 message objects.
-        /// </summary>
-        /// <param name="pushTicketRequest">Push notification object or an array of up to 100 objects.</param>
-        /// <param name="isTokenRequired">Is Access Token required. Default value is true.</param>
-        /// <returns>Response with statuses and other info about sent push notifications.</returns>
-        /// <exception cref="InvalidTokenException">Token was not set.</exception>
-        /// <exception cref="InvalidRequestException">PushTicketMessages count must be between 1 and 100.</exception>
-        /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
-        public override async Task<PushTicketResponse> SendPushAsync(PushTicketRequest[] pushTicketRequest, bool isTokenRequired = true)
-        {
-            Validate(pushTicketRequest, isTokenRequired);
+            Validate(pushTicketRequest);
             StringContent requestBody = Serialize(pushTicketRequest);
-            PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(SendPushPath(), requestBody);
+            PushTicketResponse ticketResponse = await PostAsync<PushTicketResponse>(SendPushPath, requestBody);
             return ticketResponse;
         }
 
@@ -60,16 +39,15 @@ namespace ExpoCommunityNotificationServer.Client
         /// Make sure you are only sending a list of 1000 (or less) ticket ID strings.
         /// </summary>
         /// <param name="pushReceiptRequest">Request that contains list of 1000 (or less) ticket ID strings.</param>
-        /// <param name="isTokenRequired">Is Access Token required. Default value is true.</param>
         /// <returns>Response with requested receipts.</returns>
         /// <exception cref="InvalidTokenException">Token was not set.</exception>
         /// <exception cref="InvalidRequestException">PushTicketIds must be between 1 and 1000.</exception>
         /// <exception cref="HttpPostException">HttpRequestException or unsuccessfull status code</exception>
-        public override async Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest, bool isTokenRequired = true)
+        public override async Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest)
         {
-            Validate(pushReceiptRequest, isTokenRequired);
+            Validate(pushReceiptRequest);
             StringContent requestBody = Serialize(pushReceiptRequest);
-            PushReceiptResponse receiptResponse = await PostAsync<PushReceiptResponse>(GetReceiptsPath(), requestBody);
+            PushReceiptResponse receiptResponse = await PostAsync<PushReceiptResponse>(GetReceiptsPath, requestBody);
             return receiptResponse;
         }
     }
