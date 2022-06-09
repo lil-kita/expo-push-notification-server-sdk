@@ -41,6 +41,8 @@ namespace ExpoCommunityNotificationServer.Client
         public abstract Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest);
         public abstract void SetToken(string token);
 
+        public bool IsTokenSet() => _httpClient.IsTokenSet();
+
         protected static string SendPushPath => _sendPushPath;
         protected static string GetReceiptsPath => _getReceiptsPath;
 

@@ -35,7 +35,7 @@ namespace ExpoCommunityNotificationServer.Client
         /// </summary>
         /// <param name="options">Pass token using options.</param>
         /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
-        public PushApiClient(IOptions<ExpoSettings> options) : base(options.Value?.ExpoPushToken) { }
+        public PushApiClient(IOptions<ExpoSettings> options) : base(options.Value?.ExpoAuthToken) { }
 
         /// <summary>
         /// Client with auth token.
@@ -51,7 +51,7 @@ namespace ExpoCommunityNotificationServer.Client
         /// <param name="options">Pass token using options.</param>
         /// <param name="httpClient">Custom HttpClient object</param>
         /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
-        public PushApiClient(IOptions<ExpoSettings> options, HttpClient httpClient) : base(options.Value?.ExpoPushToken, httpClient) { }
+        public PushApiClient(IOptions<ExpoSettings> options, HttpClient httpClient) : base(options.Value?.ExpoAuthToken, httpClient) { }
 
         /// <summary>
         /// Set new auth token or replace the old one.

@@ -9,6 +9,8 @@ namespace ExpoCommunityNotificationServer.Client
     /// </summary>
     public interface IPushApiClient
     {
+        bool IsTokenSet();
+
         /// <summary>
         /// Set new auth token or replace the old one.
         /// </summary>

@@ -2,6 +2,6 @@
 {
     public class ExpoSettings
     {
-        public string ExpoPushToken { get; set; }
+        public string ExpoAuthToken { get; set; }
     }
 }
