@@ -15,47 +15,38 @@ namespace ExpoCommunityNotificationServer.Client
         private const string _sendPushPath = "/--/api/v2/push/send";
         private const string _getReceiptsPath = "/--/api/v2/push/getReceipts";
 
-        private readonly HttpClientHandler _httpHandler;
-        private readonly HttpClient _httpClient;
+        private HttpClient _httpClient;
+
+        protected BaseClient(string token, HttpClient httpClient) : this(httpClient)
+        {
+            ValidateAndSetToken(token);
+        }
+
+        protected BaseClient(string token) : this()
+        {
+            ValidateAndSetToken(token);
+        }
+
+        protected BaseClient(HttpClient httpClient)
+        {
+            ConfigureClient(httpClient);
+        }
 
         protected BaseClient()
         {
-            _httpHandler = new HttpClientHandler() { MaxConnectionsPerServer = 6 };
-            _httpClient = new HttpClient(_httpHandler)
-            {
-                BaseAddress = new Uri(_expoBackendHost)
-            };
-        }
-
-        protected BaseClient(string token)
-        {
-            _httpHandler = new HttpClientHandler() { MaxConnectionsPerServer = 6 };
-            _httpClient = new HttpClient(_httpHandler)
-            {
-                BaseAddress = new Uri(_expoBackendHost)
-            };
-            try
-            {
-                SetToken(token);
-            }
-            catch
-            {
-                throw;
-            }
+            ConfigureClient();
         }
 
         public abstract Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest);
+        public abstract Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest);
+        public abstract void SetToken(string token);
 
-        public abstract Task<PushTicketResponse> SendPushAsync(PushTicketRequest[] pushTicketRequest, bool isTokenRequired = true);
+        public bool IsTokenSet() => _httpClient.IsTokenSet();
 
-        public abstract Task<PushReceiptResponse> GetReceiptsAsync(PushReceiptRequest pushReceiptRequest, bool isTokenRequired = true);
+        protected static string SendPushPath => _sendPushPath;
+        protected static string GetReceiptsPath => _getReceiptsPath;
 
-        /// <summary>
-        /// Set new auth token or replace the old one.
-        /// </summary>
-        /// <param name="token">Expo auth token.</param>
-        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
-        public void SetToken(string token)
+        protected void ValidateAndSetToken(string token)
         {
             if (string.IsNullOrWhiteSpace(token))
             {
@@ -65,29 +56,16 @@ namespace ExpoCommunityNotificationServer.Client
             SetAuthenticationToken(token);
         }
 
-        /// <summary>
-        /// Check is Access Token already set
-        /// </summary>
-        /// <returns>True if token was set</returns>
-        public bool IsTokenSet() => _httpClient.IsTokenSet();
-
-        protected static string SendPushPath() => _sendPushPath;
-
-        protected static string GetReceiptsPath() => _getReceiptsPath;
-
         protected static StringContent Serialize<TRequestModel>(TRequestModel obj) where TRequestModel : class
         {
-            string serializedRequestObj = JsonConvert.SerializeObject(obj, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            });
+            string serializedRequestObj = JsonConvert.SerializeObject(obj, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             return new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
         }
 
         protected async Task<TResponseModel> PostAsync<TResponseModel>(string path, StringContent requestBody) where TResponseModel : class
         {
-            TResponseModel responseBody = default;
-            HttpResponseMessage response = default;
+            TResponseModel responseBody;
+            HttpResponseMessage response;
             try
             {
                 response = await _httpClient.PostAsync(path, requestBody);
@@ -96,6 +74,7 @@ namespace ExpoCommunityNotificationServer.Client
             {
                 throw new HttpPostException();
             }
+
             if (response.IsSuccessStatusCode)
             {
                 string rawResponseBody = await response.Content.ReadAsStringAsync();
@@ -105,32 +84,35 @@ namespace ExpoCommunityNotificationServer.Client
             {
                 throw new HttpPostException(response.StatusCode);
             }
+
             return responseBody;
         }
 
-        protected void Validate<T>(T model, bool isTokenRequired = true)
+        protected void Validate(PushReceiptRequest receiptRequest)
         {
-            if (isTokenRequired && !_httpClient.IsTokenSet())
+            Validate();
+
+            if (!receiptRequest.IsReceiptRequestInValidRange())
+            {
+                throw new InvalidRequestException(typeof(PushReceiptRequest).Name, "PushTicketIds count should be >0 and <=1000");
+            }
+        }
+
+        protected void Validate(PushTicketRequest[] ticketRequest)
+        {
+            Validate();
+;
+            if (!ticketRequest.IsPushMessagesInValidRange())
+            {
+                throw new InvalidRequestException(typeof(PushTicketRequest).Name, "PushTicketMessages count should be >0 and <=100");
+            }
+        }
+
+        private void Validate()
+        {
+            if (!_httpClient.IsTokenSet())
             {
                 throw new InvalidTokenException("Token was not set");
-            }
-
-            bool isValid = true;
-            string error = string.Empty;
-            if (model is PushReceiptRequest receiptRequest)
-            {
-                isValid = receiptRequest.IsReceiptRequestInValidRange();
-                error = "PushTicketIds count should be >0 and <=1000";
-            }
-            else if (model is PushTicketRequest[] ticketRequest)
-            {
-                isValid = ticketRequest.IsPushMessagesInValidRange();
-                error = "PushTicketMessages count should be >0 and <=100";
-            }
-
-            if (!isValid)
-            {
-                throw new InvalidRequestException(typeof(T).Name, error);
             }
         }
 
@@ -139,6 +121,19 @@ namespace ExpoCommunityNotificationServer.Client
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        private void ConfigureClient(HttpClient client = null)
+        {
+            if (client is null)
+            {
+                _httpClient = new HttpClient() { BaseAddress = new Uri(_expoBackendHost) };
+            }
+            else
+            {
+                _httpClient = client;
+                _httpClient.BaseAddress = new Uri(_expoBackendHost);
+            }
         }
     }
 }

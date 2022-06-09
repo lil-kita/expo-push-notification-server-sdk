@@ -38,9 +38,9 @@ namespace ExpoCommunityNotificationServer.Models
         /// Defaults to undefined in order to use the respective defaults of each provider (0 for iOS/APNs and 2419200 (4 weeks) for Android/FCM)
         /// </summary>
         [JsonProperty(PropertyName = "ttl")]
-        public int? PushTTL { get; set; } 
+        public int? PushTTL { get; set; }
 
-        [Obsolete]
+        [Obsolete("Use PushTTL instead")]
         [JsonProperty(PropertyName = "expiration")]
         public int? PushExpiration { get; set; }
 
@@ -72,7 +72,7 @@ namespace ExpoCommunityNotificationServer.Models
         /// Android only. Id of chanel that will receive the message.
         /// </summary>
         [JsonProperty(PropertyName = "channelId")]
-        public string PushChannelId { get; set; }  
+        public string PushChannelId { get; set; }
 
         /// <summary>
         /// Push message receiver category
