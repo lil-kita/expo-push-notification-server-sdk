@@ -1,5 +1,6 @@
 ﻿using ExpoCommunityNotificationServer.Exceptions;
 using ExpoCommunityNotificationServer.Models;
+using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace ExpoCommunityNotificationServer.Client
     /// <summary>
     /// Provides a class for sending push notifications using Expo server
     /// </summary>
-    public sealed class PushApiClient : BaseClient
+    public class PushApiClient : BaseClient
     {
         /// <summary>
         /// Client without auth token. Set auth token before sending request
@@ -32,10 +33,25 @@ namespace ExpoCommunityNotificationServer.Client
         /// <summary>
         /// Client with auth token.
         /// </summary>
+        /// <param name="options">Pass token using options.</param>
+        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+        public PushApiClient(IOptions<ExpoSettings> options) : base(options.Value?.ExpoPushToken) { }
+
+        /// <summary>
+        /// Client with auth token.
+        /// </summary>
         /// <param name="token">Expo auth token.</param>
         /// <param name="httpClient">Custom HttpClient object</param>
         /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
         public PushApiClient(string token, HttpClient httpClient) : base(token, httpClient) { }
+
+        /// <summary>
+        /// Client with auth token.
+        /// </summary>
+        /// <param name="options">Pass token using options.</param>
+        /// <param name="httpClient">Custom HttpClient object</param>
+        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+        public PushApiClient(IOptions<ExpoSettings> options, HttpClient httpClient) : base(options.Value?.ExpoPushToken, httpClient) { }
 
         /// <summary>
         /// Set new auth token or replace the old one.

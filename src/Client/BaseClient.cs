@@ -15,7 +15,7 @@ namespace ExpoCommunityNotificationServer.Client
         private const string _sendPushPath = "/--/api/v2/push/send";
         private const string _getReceiptsPath = "/--/api/v2/push/getReceipts";
 
-        private readonly HttpClient _httpClient;
+        private HttpClient _httpClient;
 
         protected BaseClient(string token, HttpClient httpClient) : this(httpClient)
         {
@@ -29,12 +29,12 @@ namespace ExpoCommunityNotificationServer.Client
 
         protected BaseClient(HttpClient httpClient)
         {
-            _httpClient = httpClient;
+            ConfigureClient(httpClient);
         }
 
         protected BaseClient()
         {
-            _httpClient = new HttpClient() { BaseAddress = new Uri(_expoBackendHost) };
+            ConfigureClient();
         }
 
         public abstract Task<PushTicketResponse> SendPushAsync(params PushTicketRequest[] pushTicketRequest);
@@ -119,6 +119,19 @@ namespace ExpoCommunityNotificationServer.Client
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        private void ConfigureClient(HttpClient client = null)
+        {
+            if (client is null)
+            {
+                _httpClient = new HttpClient() { BaseAddress = new Uri(_expoBackendHost) };
+            }
+            else
+            {
+                _httpClient = client;
+                _httpClient.BaseAddress = new Uri(_expoBackendHost);
+            }
         }
     }
 }
