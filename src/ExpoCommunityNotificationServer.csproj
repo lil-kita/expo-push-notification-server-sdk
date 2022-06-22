@@ -8,13 +8,13 @@
     <Description>Community Expo Server SDK for Push notifications</Description>
     <Copyright>2022</Copyright>
     <RepositoryUrl>https://github.com/lil-kita/expo-push-notification-server-sdk</RepositoryUrl>
-    <PackageTags>community expo push notifications server</PackageTags>
+    <PackageTags>community expo push notifications server sdk</PackageTags>
     <PackageId>Community.Expo.Server.SDK</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>Community.Expo.Server.SDK</AssemblyName>
-    <PackageReleaseNotes>access token is required</PackageReleaseNotes>
-    <Version>1.2.0</Version>
+    <PackageReleaseNotes>small improvements</PackageReleaseNotes>
+    <Version>1.2.0.1</Version>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
