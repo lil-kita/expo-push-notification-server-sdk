@@ -11,7 +11,7 @@ namespace ExpoCommunityNotificationServer.Client
 {
     public abstract class BaseClient : IPushApiClient
     {
-        private const string _expoBackendHost = "https://exp.host";
+        private const string _expoHost = "https://exp.host";
         private const string _sendPushPath = "/--/api/v2/push/send";
         private const string _getReceiptsPath = "/--/api/v2/push/getReceipts";
 
@@ -43,6 +43,7 @@ namespace ExpoCommunityNotificationServer.Client
 
         public bool IsTokenSet() => _httpClient.IsTokenSet();
 
+        protected static string Host => _expoHost;
         protected static string SendPushPath => _sendPushPath;
         protected static string GetReceiptsPath => _getReceiptsPath;
 
@@ -62,27 +63,20 @@ namespace ExpoCommunityNotificationServer.Client
             return new StringContent(serializedRequestObj, System.Text.Encoding.UTF8, "application/json");
         }
 
-        protected async Task<TResponseModel> PostAsync<TResponseModel>(string path, StringContent requestBody) where TResponseModel : class
+        protected async Task<TResponseModel> PostAsync<TResponseModel>(string path, StringContent requestBody) where TResponseModel : Response
         {
             TResponseModel responseBody;
-            HttpResponseMessage response;
+            HttpResponseMessage response = default;
             try
             {
                 response = await _httpClient.PostAsync(path, requestBody);
-            }
-            catch
-            {
-                throw new HttpPostException();
-            }
 
-            if (response.IsSuccessStatusCode)
-            {
                 string rawResponseBody = await response.Content.ReadAsStringAsync();
                 responseBody = JsonConvert.DeserializeObject<TResponseModel>(rawResponseBody);
             }
-            else
+            catch (Exception ex)
             {
-                throw new HttpPostException(response.StatusCode);
+                throw new HttpPostException(ex, response?.StatusCode);
             }
 
             return responseBody;
@@ -101,7 +95,7 @@ namespace ExpoCommunityNotificationServer.Client
         protected void Validate(PushTicketRequest[] ticketRequest)
         {
             Validate();
-;
+            ;
             if (!ticketRequest.IsPushMessagesInValidRange())
             {
                 throw new InvalidRequestException(typeof(PushTicketRequest).Name, "PushTicketMessages count should be >0 and <=100");
@@ -127,12 +121,12 @@ namespace ExpoCommunityNotificationServer.Client
         {
             if (client is null)
             {
-                _httpClient = new HttpClient() { BaseAddress = new Uri(_expoBackendHost) };
+                _httpClient = new HttpClient() { BaseAddress = new Uri(Host) };
             }
             else
             {
                 _httpClient = client;
-                _httpClient.BaseAddress = new Uri(_expoBackendHost);
+                _httpClient.BaseAddress = new Uri(Host);
             }
         }
     }

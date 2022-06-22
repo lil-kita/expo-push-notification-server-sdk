@@ -10,15 +10,7 @@ namespace ExpoCommunityNotificationServer.Exceptions
     [Serializable()]
     public class HttpPostException : HttpRequestException
     {
-        private readonly HttpStatusCode _status;
-
-        public HttpPostException() : base() { }
-
-        public HttpPostException(HttpStatusCode status) : base()
-        {
-            _status = status;
-        }
-
-        public new HttpStatusCode StatusCode() => _status;
+        public HttpPostException(Exception ex, HttpStatusCode? status = null) 
+            : base("Exception on request", ex, status) { }
     }
 }
