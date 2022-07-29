@@ -9,11 +9,14 @@ using System.Threading.Tasks;
 
 namespace ExpoCommunityNotificationServer.Client
 {
-    public abstract class BaseClient : IPushApiClient
+    public abstract class BaseClient : IPushApiClient, IDisposable
     {
         private const string _expoHost = "https://exp.host";
         private const string _sendPushPath = "/--/api/v2/push/send";
         private const string _getReceiptsPath = "/--/api/v2/push/getReceipts";
+
+        private bool _disposed;
+        private bool _disposeClient;
 
         private HttpClient _httpClient;
 
@@ -43,6 +46,7 @@ namespace ExpoCommunityNotificationServer.Client
 
         public bool IsTokenSet() => _httpClient.IsTokenSet();
 
+        protected HttpClient Client => _httpClient;
         protected static string Host => _expoHost;
         protected static string SendPushPath => _sendPushPath;
         protected static string GetReceiptsPath => _getReceiptsPath;
@@ -70,6 +74,7 @@ namespace ExpoCommunityNotificationServer.Client
             try
             {
                 response = await _httpClient.PostAsync(path, requestBody);
+                response.EnsureSuccessStatusCode();
 
                 string rawResponseBody = await response.Content.ReadAsStringAsync();
                 responseBody = JsonConvert.DeserializeObject<TResponseModel>(rawResponseBody);
@@ -95,7 +100,7 @@ namespace ExpoCommunityNotificationServer.Client
         protected void Validate(PushTicketRequest[] ticketRequest)
         {
             Validate();
-            ;
+
             if (!ticketRequest.IsPushMessagesInValidRange())
             {
                 throw new InvalidRequestException(typeof(PushTicketRequest).Name, "PushTicketMessages count should be >0 and <=100");
@@ -122,12 +127,42 @@ namespace ExpoCommunityNotificationServer.Client
             if (client is null)
             {
                 _httpClient = new HttpClient() { BaseAddress = new Uri(Host) };
+                _disposeClient = true;
             }
             else
             {
                 _httpClient = client;
                 _httpClient.BaseAddress = new Uri(Host);
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            // dispose managed state (managed objects)
+            if (disposing)
+            {
+                if (_disposeClient)
+                {
+                    _httpClient?.Dispose();
+                }
+            }
+
+            // free unmanaged resources (unmanaged objects) and override finalizer
+            // set large fields to null
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
