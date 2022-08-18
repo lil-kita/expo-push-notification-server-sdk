@@ -2,7 +2,12 @@
 using ExpoCommunityNotificationServer.Helpers;
 using ExpoCommunityNotificationServer.Models;
 using Newtonsoft.Json;
+using Polly;
+using Polly.Contrib.WaitAndRetry;
+using Polly.Extensions.Http;
+using Polly.Retry;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -14,6 +19,9 @@ namespace ExpoCommunityNotificationServer.Client
         private const string _expoHost = "https://exp.host";
         private const string _sendPushPath = "/--/api/v2/push/send";
         private const string _getReceiptsPath = "/--/api/v2/push/getReceipts";
+
+        private readonly TimeSpan _retryDelay = TimeSpan.FromMilliseconds(500);
+        private readonly int _retryCount = 3;
 
         private bool _disposed;
         private bool _disposeClient;
@@ -73,7 +81,7 @@ namespace ExpoCommunityNotificationServer.Client
             HttpResponseMessage response = default;
             try
             {
-                response = await _httpClient.PostAsync(path, requestBody);
+                response = await PostAsync(_httpClient.PostAsync(path, requestBody));
                 response.EnsureSuccessStatusCode();
 
                 string rawResponseBody = await response.Content.ReadAsStringAsync();
@@ -86,6 +94,18 @@ namespace ExpoCommunityNotificationServer.Client
 
             return responseBody;
         }
+
+        private async Task<HttpResponseMessage> PostAsync(Task<HttpResponseMessage> postAction)
+        {
+            IEnumerable<TimeSpan> delay = Backoff.ExponentialBackoff(_retryDelay, _retryCount);
+            AsyncRetryPolicy<HttpResponseMessage> retryPolicy = GetRetryPolicy(delay);
+            return await retryPolicy.ExecuteAsync(async () => await postAction);
+        }
+
+        private static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy(IEnumerable<TimeSpan> delay) => HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .OrResult(response => (int)response.StatusCode == 429)
+            .WaitAndRetryAsync(delay);
 
         protected void Validate(PushReceiptRequest receiptRequest)
         {
