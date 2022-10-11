@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 namespace ExpoCommunityNotificationServer.Models
 {   
-    /// <summary>
-    /// Base response class
-    /// </summary>
     public class Response
     {
         [JsonProperty(PropertyName = "errors")]

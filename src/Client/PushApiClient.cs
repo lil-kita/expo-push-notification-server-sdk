@@ -1,6 +1,7 @@
 ﻿using ExpoCommunityNotificationServer.Exceptions;
 using ExpoCommunityNotificationServer.Models;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -12,45 +13,38 @@ namespace ExpoCommunityNotificationServer.Client
     public class PushApiClient : BaseClient
     {
         /// <summary>
-        /// Client without auth token. Set auth token before sending request
+        /// Do not forget to set auth token before sending request, if token was not passed to constructor.<br></br>
+        /// Token from options have priority over token.<br></br>
+        /// Settings object have priority over settings object from options.<br></br>
         /// </summary>
-        public PushApiClient() : base() { }
+        /// <param name="token">Expo auth token.</param>
+        /// <param name="httpClient">Custom HttpClient object.</param>
+        /// <param name="options">Pass settings using options.<br></br> Token from options have priority over token.</param>
+        /// <param name="settings">Pass expo settings<br></br> Settings object have priority over settings object from options.</param>
+        public PushApiClient(string token = null, HttpClient httpClient = null, IOptions<ExpoSettings> options = null, ExpoSettings settings = null) : base(httpClient)
+        {
+            settings = settings ?? options?.Value ?? new ExpoSettings();
+            if (string.IsNullOrWhiteSpace(settings.ExpoAuthToken))
+            {
+                settings.ExpoAuthToken = token;
+            }
 
-        /// <summary>
-        /// Client without auth token. Set auth token before sending request
-        /// </summary>
-        /// <param name="httpClient">Custom HttpClient object</param>
-        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+            SetSettings(settings);
+        }
+
+        [Obsolete("Please use public PushApiClient(string token = null, HttpClient httpClient = null, IOptions<ExpoSettings> options = null, ExpoSettings settings = null)")]
         public PushApiClient(HttpClient httpClient) : base(httpClient) { }
 
-        /// <summary>
-        /// Client with auth token.
-        /// </summary>
-        /// <param name="token">Expo auth token.</param>
-        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+        [Obsolete("Please use public PushApiClient(string token = null, HttpClient httpClient = null, IOptions<ExpoSettings> options = null, ExpoSettings settings = null)")]
         public PushApiClient(string token) : base(token) { }
 
-        /// <summary>
-        /// Client with auth token.
-        /// </summary>
-        /// <param name="options">Pass token using options.</param>
-        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+        [Obsolete("Please use public PushApiClient(string token = null, HttpClient httpClient = null, IOptions<ExpoSettings> options = null, ExpoSettings settings = null)")]
         public PushApiClient(IOptions<ExpoSettings> options) : base(options.Value?.ExpoAuthToken) { }
 
-        /// <summary>
-        /// Client with auth token.
-        /// </summary>
-        /// <param name="token">Expo auth token.</param>
-        /// <param name="httpClient">Custom HttpClient object</param>
-        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+        [Obsolete("Please use public PushApiClient(string token = null, HttpClient httpClient = null, IOptions<ExpoSettings> options = null, ExpoSettings settings = null)")]
         public PushApiClient(string token, HttpClient httpClient) : base(token, httpClient) { }
 
-        /// <summary>
-        /// Client with auth token.
-        /// </summary>
-        /// <param name="options">Pass token using options.</param>
-        /// <param name="httpClient">Custom HttpClient object</param>
-        /// <exception cref="InvalidTokenException">Token is null, empty or white space.</exception>
+        [Obsolete("Please use public PushApiClient(string token = null, HttpClient httpClient = null, IOptions<ExpoSettings> options = null, ExpoSettings settings = null)")]
         public PushApiClient(IOptions<ExpoSettings> options, HttpClient httpClient) : base(options.Value?.ExpoAuthToken, httpClient) { }
 
         /// <summary>

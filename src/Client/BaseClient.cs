@@ -20,8 +20,8 @@ namespace ExpoCommunityNotificationServer.Client
         private const string _sendPushPath = "/--/api/v2/push/send";
         private const string _getReceiptsPath = "/--/api/v2/push/getReceipts";
 
-        private readonly TimeSpan _retryDelay = TimeSpan.FromMilliseconds(500);
-        private readonly int _retryCount = 3;
+        private TimeSpan _retryDelay = TimeSpan.FromMilliseconds(500);
+        private int _retryCount = 3;
 
         private bool _disposed;
         private bool _disposeClient;
@@ -58,6 +58,17 @@ namespace ExpoCommunityNotificationServer.Client
         protected static string Host => _expoHost;
         protected static string SendPushPath => _sendPushPath;
         protected static string GetReceiptsPath => _getReceiptsPath;
+
+        protected void SetSettings(ExpoSettings settings)
+        {
+            _retryCount = settings.RetriesNumber;
+            _retryDelay = TimeSpan.FromMilliseconds(settings.RetriesDelayMS);
+
+            if (!string.IsNullOrWhiteSpace(settings.ExpoAuthToken))
+            {
+                SetAuthenticationToken(settings.ExpoAuthToken);
+            }
+        }
 
         protected void ValidateAndSetToken(string token)
         {

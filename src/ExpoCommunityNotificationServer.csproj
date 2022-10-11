@@ -13,8 +13,8 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>Community.Expo.Server.SDK</AssemblyName>
-    <PackageReleaseNotes>add retries</PackageReleaseNotes>
-    <Version>1.2.1</Version>
+    <PackageReleaseNotes>update options</PackageReleaseNotes>
+    <Version>1.2.1.1</Version>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
