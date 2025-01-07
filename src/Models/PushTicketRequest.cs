@@ -17,6 +17,12 @@ namespace ExpoCommunityNotificationServer.Models
         public List<string> PushTo { get; set; }
 
         /// <summary>
+        /// iOS only. Cause the app to start in the background to run a background task.
+        /// </summary>
+        [JsonProperty(PropertyName = "_contentAvailable")]
+        public bool? PushContentAvailable { get; set; }
+
+        /// <summary>
         /// A JSON object delivered to your app
         /// </summary>
         [JsonProperty(PropertyName = "data")]
@@ -67,6 +73,12 @@ namespace ExpoCommunityNotificationServer.Models
         /// </summary>
         [JsonProperty(PropertyName = "badge")]
         public int? PushBadgeCount { get; set; }
+
+        /// <summary>
+        /// iOS only : 'active' | 'critical' | 'passive' | 'time-sensitive'
+        /// </summary>
+        [JsonProperty(PropertyName = "interruptionLevel")]
+        public string PushInterruptionLevel { get; set; }
 
         /// <summary>
         /// Android only. Id of chanel that will receive the message.
